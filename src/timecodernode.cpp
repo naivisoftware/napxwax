@@ -126,7 +126,7 @@ namespace nap
             if (valid)
             {
                 auto position = static_cast<unsigned int>(result);
-                mTime.store(static_cast<double>(position) / 1000 + timecoderOffsets[mControl]);
+                mTime.store(static_cast<double>(position) / 1000.0 + timecoderOffsets[mControl]);
             }
             mDirty.set();
 
