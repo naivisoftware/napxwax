@@ -110,9 +110,9 @@ namespace nap
 	        // these input pins are connected by the TimecoderComponentInstance init method
 	        InputPin audioInputLeft = { this };
 	        InputPin audioInputRight = { this };
-	
-	        OutputPin audioOutputRight = { this };
+
 	        OutputPin audioOutputLeft = { this };
+	    	OutputPin audioOutputRight = { this };
 	    private:
 	        /**
 	         * Implementation in .cpp file
