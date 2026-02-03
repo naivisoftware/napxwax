@@ -109,8 +109,8 @@ namespace nap
                     task();
             }
 
-            mBuffers[0] = audioInputRight.pull();
-            mBuffers[1] = audioInputLeft.pull();
+            mBuffers[0] = audioInputLeft.pull();
+            mBuffers[1] = audioInputRight.pull();
 
             for (auto s = 0; s < getBufferSize(); ++s)
             {
@@ -132,8 +132,8 @@ namespace nap
 
             auto& buffer_left = getOutputBuffer(audioOutputLeft);
             auto& buffer_right = getOutputBuffer(audioOutputRight);
-            buffer_right = *mBuffers[0];
-            buffer_left = *mBuffers[1];
+            buffer_left = *mBuffers[0];
+            buffer_right = *mBuffers[1];
         }
 
 
