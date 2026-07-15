@@ -120,9 +120,8 @@ namespace nap
 	         */
 	        class Impl;
 	        std::unique_ptr<Impl> mImpl;
-	
+
 	        double mPosition = 0.0;
-	
 	        short mSamples[2] = { 0, 0 };
 	        SampleBuffer* mBuffers[2] = {nullptr, nullptr};
 	        std::atomic<double> mTime{0.0};
