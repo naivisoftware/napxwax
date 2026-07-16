@@ -120,7 +120,7 @@ namespace nap
             }
 
             mPitch.store(timecoder_get_pitch(&mImpl->mTimeCoder));
-            int result = timecoder_get_position(&mImpl->mTimeCoder, &mPosition);
+            int result = timecoder_get_position(&mImpl->mTimeCoder, &mDelta);
             bool valid = result != -1;
             if (valid)
             {

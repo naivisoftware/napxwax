@@ -96,6 +96,12 @@ namespace nap
 	         */
 	        double getTime() const { return mTime; }
 
+	    	/**
+        	 * Returns elapsed time in seconds when time code was read - audio thread only!
+        	 * @return elapsed time in seconds when time code was read - audio thread only!
+        	 */
+        	double getDelta() const { return mDelta; }
+
 			/**
 			 * Returns the current absolute time in seconds
 			 * @return the current absolute time in seconds
@@ -113,6 +119,7 @@ namespace nap
 
 	        OutputPin audioOutputLeft = { this };
 	    	OutputPin audioOutputRight = { this };
+
 	    private:
 	        /**
 	         * Implementation in .cpp file
@@ -121,7 +128,7 @@ namespace nap
 	        class Impl;
 	        std::unique_ptr<Impl> mImpl;
 
-	        double mPosition = 0.0;
+	        double mDelta = 0.0;
 	        short mSamples[2] = { 0, 0 };
 	        SampleBuffer* mBuffers[2] = {nullptr, nullptr};
 	        std::atomic<double> mTime{0.0};
