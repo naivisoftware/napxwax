@@ -107,12 +107,6 @@ namespace nap
 	    	 * @return if the time code is considered safe to use - audio thread only!
 	    	 */
 	    	bool getSafe() const { return mSafe;}
-
-			/**
-			 * Returns the current absolute time in seconds
-			 * @return the current absolute time in seconds
-			 */
-			double getAbsoluteTime() const { return mTime / double(mReferenceSpeed); }
 	
 			/**
 			 * @return if current time code is valid
