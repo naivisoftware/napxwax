@@ -102,6 +102,12 @@ namespace nap
         	 */
         	double getDelta() const { return mDelta; }
 
+	    	/**
+	    	 * If the returned time code is considered safe to use - audio thread only!
+	    	 * @return if the time code is considered safe to use - audio thread only!
+	    	 */
+	    	bool getSafe() const { return mSafe;}
+
 			/**
 			 * Returns the current absolute time in seconds
 			 * @return the current absolute time in seconds
@@ -129,6 +135,8 @@ namespace nap
 	        std::unique_ptr<Impl> mImpl;
 
 	        double mDelta = 0.0;
+	    	bool mSafe = false;
+
 	        short mSamples[2] = { 0, 0 };
 	        SampleBuffer* mBuffers[2] = {nullptr, nullptr};
 	        std::atomic<double> mTime{0.0};

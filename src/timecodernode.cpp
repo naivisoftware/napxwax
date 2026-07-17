@@ -121,11 +121,12 @@ namespace nap
 
             mPitch.store(timecoder_get_pitch(&mImpl->mTimeCoder));
             auto result = timecoder_get_position(&mImpl->mTimeCoder, &mDelta);
-            bool tvalid = result != -1;
+            bool tvalid = result != -1; mSafe = false;
             if (tvalid)
             {
                 auto res = timecoder_get_resolution(&mImpl->mTimeCoder);
                 mTime.store(static_cast<double>(result) / res + timecoderOffsets[mControl]);
+                mSafe = timecoder_get_safe(&mImpl->mTimeCoder);
             }
             mCurrentTimecodeValid.store(tvalid);
             mDirty.set();
