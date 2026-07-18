@@ -133,9 +133,9 @@ namespace nap
 
 	        short mSamples[2] = { 0, 0 };
 	        SampleBuffer* mBuffers[2] = {nullptr, nullptr};
-	        std::atomic<double> mTime{0.0};
-	        std::atomic<double> mPitch{0.0};
-	        std::atomic_bool mCurrentTimecodeValid{false};
+	        std::atomic<double> mTime = { 0.0 };
+	        std::atomic<double> mPitch = { 0.0 };
+	        std::atomic_bool mCurrentTimecodeValid = {false};
 	        DirtyFlag mDirty;
 	
 	        // accessed only from update / main thread
