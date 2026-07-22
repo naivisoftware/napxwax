@@ -132,7 +132,7 @@ namespace nap
             {
                 auto res = timecoder_get_resolution(&mImpl->mTimeCoder);
                 mTime.store(static_cast<double>(result) / res + timecoderOffsets[mControl]);
-                mSafe = timecoder_get_safe(&mImpl->mTimeCoder);
+                mSafe = result <= timecoder_get_safe(&mImpl->mTimeCoder);
             }
             mCurrentTimecodeValid.store(tvalid);
 
