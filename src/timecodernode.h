@@ -54,10 +54,10 @@ namespace nap
 	        void sampleRateChanged(float sampleRate) override;
 	
 	        /**
-	         * Sets time in seconds and pitch when the dirty flag is set, returns true if the dirty flag was set, false otherwise.
+			 * Returns last known DVS time, pitch and if time-code is currently valid (read).
 	         * @param time will be set to current time in seconds
 	         * @param pitch will be set to current pitch
-	         * @return true if the dirty flag was set, false otherwise. Given values will only be updated when dirty flag was set.
+	         * @return true if DVS data is new
 	         */
 	        bool consumeTimeAndPitch(double &time, double &pitch, bool &timecodeValid);
 	
@@ -85,13 +85,18 @@ namespace nap
 	        float getReferenceSpeed() const { return mReferenceSpeed; }
 	
 	        /**
-	         * Returns the current pitch, should only be called from audio thread, so either a node or another process attached to the audio thread
+	         * Returns the current pitch
 	         * @return the current pitch
 	         */
 	        double getPitch() const { return mPitch; }
-	
+
+			/**
+			 * @return if current time code is valid
+			 */
+	        bool getCurrentTimecodeValid() const { return mCurrentTimecodeValid; }
+
 	        /**
-	         * Returns the current time in seconds, should only be called from audio thread, so either a node or another process attached to the audio thread
+	         * Returns the current time in seconds
 	         * @return the current time in seconds
 	         */
 	        double getTime() const { return mTime; }
@@ -107,11 +112,6 @@ namespace nap
 	    	 * @return if the time code is considered safe to use - audio thread only!
 	    	 */
 	    	bool getSafe() const { return mSafe;}
-	
-			/**
-			 * @return if current time code is valid
-			 */
-	        bool getCurrentTimecodeValid() const { return mCurrentTimecodeValid; }
 	
 	        // these input pins are connected by the TimecoderComponentInstance init method
 	        InputPin audioInputLeft = { this };
