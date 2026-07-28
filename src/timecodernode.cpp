@@ -125,7 +125,7 @@ namespace nap
             // Store pitch
             mPitch.store(timecoder_get_pitch(&mImpl->mTimeCoder));
 
-            // Store time code information (if it's available)
+            // Update time code information (if it's available)
             auto result = timecoder_get_position(&mImpl->mTimeCoder, &mDelta);
             bool tvalid = result != -1; mSafe = false;
             if (tvalid)
@@ -134,10 +134,9 @@ namespace nap
                 mTime.store(static_cast<double>(result) / res + timecoderOffsets[mControl]);
                 mSafe = result <= timecoder_get_safe(&mImpl->mTimeCoder);
             }
-            mCurrentTimecodeValid.store(tvalid);
 
-            // Allow others to fetch it
-            mDirty.set();
+			// Update time-code availability
+            mCurrentTimecodeValid.store(tvalid);
 
             // Set output buffers
             auto& buffer_left = getOutputBuffer(audioOutputLeft);
@@ -145,25 +144,6 @@ namespace nap
 
             auto& buffer_right = getOutputBuffer(audioOutputRight);
             buffer_right = *mBuffers[1];
-        }
-
-
-        bool TimecoderNode::consumeTimeAndPitch(double &time, double &pitch, bool &timecodeValid)
-        {
-            bool return_value = false;
-            if(mDirty.check())
-            {
-                mConsumedTime = mTime.load();
-                mConsumedPitch = mPitch.load();
-                mConsumedTimecodeValid = mCurrentTimecodeValid.load();
-                return_value = true;
-            }
-
-            time = mConsumedTime;
-            pitch = mConsumedPitch;
-            timecodeValid = mConsumedTimecodeValid;
-
-            return return_value;
         }
 
 

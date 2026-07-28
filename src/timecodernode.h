@@ -54,14 +54,6 @@ namespace nap
 	        void sampleRateChanged(float sampleRate) override;
 	
 	        /**
-			 * Returns last known DVS time, pitch and if time-code is currently valid (read).
-	         * @param time will be set to current time in seconds
-	         * @param pitch will be set to current pitch
-	         * @return true if DVS data is new
-	         */
-	        bool consumeTimeAndPitch(double &time, double &pitch, bool &timecodeValid);
-	
-	        /**
 	         * Change control, re-initializes the timecoder.
 	         * @param control control to change to
 	         */
@@ -136,7 +128,6 @@ namespace nap
 	        std::atomic<double> mTime = { 0.0 };
 	        std::atomic<double> mPitch = { 0.0 };
 	        std::atomic_bool mCurrentTimecodeValid = {false};
-	        DirtyFlag mDirty;
 	
 	        // accessed only from update / main thread
 	        double mConsumedPitch = 0.0f;

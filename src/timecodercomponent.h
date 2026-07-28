@@ -98,19 +98,6 @@ namespace nap
             void update(double deltaTime) override;
 
             /**
-             * Returns relative time, relative time is computed by pitch and delta time in update
-             * You can reset the relative time by calling setRelativeTime
-             * @return relative time
-             */
-            double getRelativeTime() const { return mRelativeTime; }
-
-            /**
-             * Sets relative time
-             * @param time the new relative time
-             */
-            void setRelativeTime(double time) { mRelativeTime = time; }
-
-            /**
              * Returns the pitch computed by the TimecoderNode
              * @return pitch
              */
@@ -159,7 +146,6 @@ namespace nap
 
             double mPitch = 0.0;
             double mTimecode = 0.0;
-            double mRelativeTime = 0.0;
             float mReferenceSpeed = 1.0f;
             ETimecodeContol mControl = ETimecodeContol::SERATO_2A;
 			ETimecodeMode mMode = ETimecodeMode::DVS;
