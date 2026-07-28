@@ -54,10 +54,10 @@ namespace nap
 	        void sampleRateChanged(float sampleRate) override;
 	
 	        /**
-	         * Sets time in seconds and pitch when the dirty flag is set, returns true if the dirty flag was set, false otherwise.
+			 * Returns last known DVS time, pitch and if time-code is currently valid (read).
 	         * @param time will be set to current time in seconds
 	         * @param pitch will be set to current pitch
-	         * @return true if the dirty flag was set, false otherwise. Given values will only be updated when dirty flag was set.
+	         * @return true if DVS data is new
 	         */
 	        bool consumeTimeAndPitch(double &time, double &pitch, bool &timecodeValid);
 	
@@ -85,27 +85,33 @@ namespace nap
 	        float getReferenceSpeed() const { return mReferenceSpeed; }
 	
 	        /**
-	         * Returns the current pitch, should only be called from audio thread, so either a node or another process attached to the audio thread
+	         * Returns the current pitch
 	         * @return the current pitch
 	         */
 	        double getPitch() const { return mPitch; }
-	
-	        /**
-	         * Returns the current time in seconds, should only be called from audio thread, so either a node or another process attached to the audio thread
-	         * @return the current time in seconds
-	         */
-	        double getTime() const { return mTime; }
 
-			/**
-			 * Returns the current absolute time in seconds
-			 * @return the current absolute time in seconds
-			 */
-			double getAbsoluteTime() const { return mTime / double(mReferenceSpeed); }
-	
 			/**
 			 * @return if current time code is valid
 			 */
 	        bool getCurrentTimecodeValid() const { return mCurrentTimecodeValid; }
+
+	        /**
+	         * Returns the current time in seconds
+	         * @return the current time in seconds
+	         */
+	        double getTime() const { return mTime; }
+
+	    	/**
+        	 * Returns elapsed time in seconds when time code was read - audio thread only!
+        	 * @return elapsed time in seconds when time code was read - audio thread only!
+        	 */
+        	double getDelta() const { return mDelta; }
+
+	    	/**
+	    	 * If the returned time code is considered safe to use - audio thread only!
+	    	 * @return if the time code is considered safe to use - audio thread only!
+	    	 */
+	    	bool getSafe() const { return mSafe;}
 	
 	        // these input pins are connected by the TimecoderComponentInstance init method
 	        InputPin audioInputLeft = { this };
@@ -113,6 +119,7 @@ namespace nap
 
 	        OutputPin audioOutputLeft = { this };
 	    	OutputPin audioOutputRight = { this };
+
 	    private:
 	        /**
 	         * Implementation in .cpp file
@@ -120,14 +127,15 @@ namespace nap
 	         */
 	        class Impl;
 	        std::unique_ptr<Impl> mImpl;
-	
-	        double mPosition = 0.0;
-	
+
+	        double mDelta = 0.0;
+	    	bool mSafe = false;
+
 	        short mSamples[2] = { 0, 0 };
 	        SampleBuffer* mBuffers[2] = {nullptr, nullptr};
-	        std::atomic<double> mTime{0.0};
-	        std::atomic<double> mPitch{0.0};
-	        std::atomic_bool mCurrentTimecodeValid{false};
+	        std::atomic<double> mTime = { 0.0 };
+	        std::atomic<double> mPitch = { 0.0 };
+	        std::atomic_bool mCurrentTimecodeValid = {false};
 	        DirtyFlag mDirty;
 	
 	        // accessed only from update / main thread

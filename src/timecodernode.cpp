@@ -102,6 +102,11 @@ namespace nap
 
         void TimecoderNode::process()
         {
+            // First pull all inputd -> forcing a cook of all dependencies
+            mBuffers[0] = audioInputLeft.pull();
+            mBuffers[1] = audioInputRight.pull();
+
+            // Create (re-create)timecoder instance
             if(mTaskQueue.size_approx()>0)
             {
                 std::function<void()> task;
@@ -109,9 +114,7 @@ namespace nap
                     task();
             }
 
-            mBuffers[0] = audioInputLeft.pull();
-            mBuffers[1] = audioInputRight.pull();
-
+            // Supply time-code instance with most recent input data
             for (auto s = 0; s < getBufferSize(); ++s)
             {
                 mSamples[0] = static_cast<short>(mBuffers[0]->at(s) * (1<<15));
@@ -119,20 +122,28 @@ namespace nap
                 timecoder_submit(&mImpl->mTimeCoder, mSamples, 1);
             }
 
+            // Store pitch
             mPitch.store(timecoder_get_pitch(&mImpl->mTimeCoder));
-            int result = timecoder_get_position(&mImpl->mTimeCoder, &mPosition);
-            bool valid = result != -1;
-            mCurrentTimecodeValid.store(valid);
-            if (valid)
+
+            // Store time code information (if it's available)
+            auto result = timecoder_get_position(&mImpl->mTimeCoder, &mDelta);
+            bool tvalid = result != -1; mSafe = false;
+            if (tvalid)
             {
-                auto position = static_cast<unsigned int>(result);
-                mTime.store(static_cast<double>(position) / 1000.0 + timecoderOffsets[mControl]);
+                auto res = timecoder_get_resolution(&mImpl->mTimeCoder);
+                mTime.store(static_cast<double>(result) / res + timecoderOffsets[mControl]);
+                mSafe = result <= timecoder_get_safe(&mImpl->mTimeCoder);
             }
+            mCurrentTimecodeValid.store(tvalid);
+
+            // Allow others to fetch it
             mDirty.set();
 
+            // Set output buffers
             auto& buffer_left = getOutputBuffer(audioOutputLeft);
-            auto& buffer_right = getOutputBuffer(audioOutputRight);
             buffer_left = *mBuffers[0];
+
+            auto& buffer_right = getOutputBuffer(audioOutputRight);
             buffer_right = *mBuffers[1];
         }
 
